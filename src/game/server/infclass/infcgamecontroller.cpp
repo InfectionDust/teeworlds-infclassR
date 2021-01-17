@@ -280,6 +280,8 @@ const char *CInfClassGameController::GetClassName(int PlayerClass)
 			return "boomer";
 		case PLAYERCLASS_HUNTER:
 			return "hunter";
+		case PLAYERCLASS_JOCKEY:
+			return "jockey";
 		case PLAYERCLASS_BAT:
 			return "bat";
 		case PLAYERCLASS_GHOST:
@@ -333,6 +335,8 @@ const char *CInfClassGameController::GetClassPluralName(int PlayerClass)
 			return "boomers";
 		case PLAYERCLASS_HUNTER:
 			return "hunters";
+		case PLAYERCLASS_JOCKEY:
+			return "jockeys";
 		case PLAYERCLASS_BAT:
 			return "bats";
 		case PLAYERCLASS_GHOST:
@@ -386,6 +390,8 @@ const char *CInfClassGameController::GetClassDisplayName(int PlayerClass, const 
 			return _("Boomer");
 		case PLAYERCLASS_HUNTER:
 			return _("Hunter");
+		case PLAYERCLASS_JOCKEY:
+			return _("Jockey");
 		case PLAYERCLASS_BAT:
 			return _("Bat");
 		case PLAYERCLASS_GHOST:
@@ -440,6 +446,8 @@ const char *CInfClassGameController::GetClassPluralDisplayName(int PlayerClass)
 			return _("Boomers");
 		case PLAYERCLASS_HUNTER:
 			return _("Hunters");
+		case PLAYERCLASS_JOCKEY:
+			return _("Jockeys");
 		case PLAYERCLASS_BAT:
 			return _("Bats");
 		case PLAYERCLASS_GHOST:

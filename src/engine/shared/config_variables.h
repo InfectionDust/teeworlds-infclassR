@@ -107,6 +107,7 @@ MACRO_CONFIG_INT(InfInfzoneFreezeDuration, inf_infzone_freeze_duration, 2, 0, 10
 
 MACRO_CONFIG_INT(InfProbaSmoker, inf_proba_smoker, 20, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a smoker")
 MACRO_CONFIG_INT(InfProbaHunter, inf_proba_hunter, 20, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a hunter")
+MACRO_CONFIG_INT(InfProbaJockey, inf_proba_jockey, 20, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a jockey")
 MACRO_CONFIG_INT(InfProbaBat, inf_proba_bat, 4, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a bat")
 MACRO_CONFIG_INT(InfProbaBoomer, inf_proba_boomer, 20, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a boomer")
 MACRO_CONFIG_INT(InfProbaGhost, inf_proba_ghost, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a ghost")
