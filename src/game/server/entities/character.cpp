@@ -1065,6 +1065,13 @@ void CCharacter::Tick()
 	CoreTickParams.m_HookMode = m_HookMode;
 	
 	vec2 PrevPos = m_Core.m_Pos;
+
+	if (m_Core.m_Passenger)
+	{
+		if(m_Core.m_Infected || m_Core.m_HookProtected || m_Core.m_Passenger->m_Infected)
+			m_Core.SetPassenger(nullptr);
+	}
+
 	m_Core.Tick(true, &CoreTickParams);
 	
 	if(GetPlayerClass() == PLAYERCLASS_SNIPER && m_PositionLocked)
