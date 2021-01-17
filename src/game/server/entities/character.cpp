@@ -580,9 +580,9 @@ void CCharacter::HandleWeapons()
 				int Damage = 1;
 				if(GetPlayerClass() == PLAYERCLASS_JOCKEY)
 				{
-					Damage = 0;
-					if(!m_Core.m_IsPassenger)
+					if(!m_Core.m_IsPassenger && !VictimChar->m_Core.m_Passenger)
 					{
+						Damage = 0;
 						LeapToTarget(VictimChar);
 					}
 				}
