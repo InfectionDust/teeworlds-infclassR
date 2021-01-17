@@ -64,6 +64,7 @@ m_pConsole(pConsole)
 	m_DartLifeSpan = -1;
 	m_IsInvisible = false;
 	m_InvisibleTick = 0;
+	m_NextDryingTick = 0;
 	m_PositionLockTick = -1;
 	m_PositionLocked = false;
 	m_PositionLockAvailable = false;
@@ -604,6 +605,8 @@ void CCharacter::HandleWeapons()
 				}
 			}
 		}
+
+		HandleDrying();
 	}
 
 	if(m_Leaping)
@@ -611,15 +614,15 @@ void CCharacter::HandleWeapons()
 		vec2 Direction = m_LeapingTargetPosition - m_Pos;
 		if (length(Direction) < m_ProximityRadius)
 		{
-		    m_Core.m_Vel = vec2(0, 0);
-		    m_Core.m_Pos = m_LeapingTargetPosition;
-		    m_Leaping = false;
+			m_Core.m_Vel = vec2(0, 0);
+			m_Core.m_Pos = m_LeapingTargetPosition;
+			m_Leaping = false;
 		}
 		else
 		{
-		    // Leap right to the target position
-		    float Intensity = 4; // g_Config.m_InfLeapSpeed / 10.0f;
-		    m_Core.m_Vel += normalize(Direction)*Intensity;
+			// Leap right to the target position
+			float Intensity = 4; // g_Config.m_InfLeapSpeed / 10.0f;
+			m_Core.m_Vel += normalize(Direction)*Intensity;
 		}
 	}
 /* INFECTION MODIFICATION END *****************************************/
@@ -2478,5 +2481,101 @@ float CCharacter::WebHookLength() const
 		return 0;
 
 	return distance(m_Core.m_Pos, m_Core.m_HookPos);
+}
+
+void CCharacter::LeapToTarget(CCharacter *pTarget)
+{
+	// Y direction: zero is up, positive is down, negative is far in the sky
+	const vec2 TargetPosition = vec2(pTarget->m_Pos.x, pTarget->m_Pos.y + CCharacterCore::PassengerYOffset);
+	static const vec2 CharacterSize = vec2(CCharacterCore::PhysicalSize, CCharacterCore::PhysicalSize);
+	
+	// Check if the tile above the target is empty
+	if(GameServer()->Collision()->TestBox(TargetPosition, CharacterSize))
+	{
+		return;
+	}
+
+	float Distance = distance(m_Pos, TargetPosition);
+	if(Distance < m_ProximityRadius * 2.2)
+	{
+		// We're close enough.
+		// Sit on the head as a passenger
+		pTarget->m_Core.SetPassenger(&m_Core);
+		// TODO: Clear previous passenger (verify the clear)
+		m_Leaping = false;
+		return;
+	}
+
+	if (pTarget->m_Pos.y >= m_Pos.y) // We're upper than the target
+	{
+		// go to the target
+		if (m_Core.m_Vel.y < 0)
+		{
+			// If we're going down, reduce the the vertical velocity by an half
+			m_Core.m_Vel.y /= 2;
+		}
+		else if (m_Core.m_Vel.y < 0)
+		{
+			// We're going up.
+			// TODO
+		}
+	}
+	else
+	{
+		// We're below the target
+		if(m_Core.m_Vel.y >= 0)
+		{
+			// We're falling down and can't do anything
+			// m_Leaping = false;
+			return;
+		}
+		else
+		{
+			// Go to the target
+		}
+	}
+	
+	m_LeapingTargetPosition = TargetPosition;
+	if (!m_Leaping)
+	{
+		m_Leaping = true;
+		
+		vec2 Direction = m_LeapingTargetPosition - m_Pos;
+		
+		m_Core.m_Vel = normalize(Direction) * 10; // g_Config.m_InfLeapSpeed / 10.0f;
+	}
+}
+
+void CCharacter::HandleDrying()
+{
+	if ((GetPlayerClass() != PLAYERCLASS_JOCKEY) || !m_Core.m_IsPassenger)
+		return;
+
+	if(m_NextDryingTick == Server()->Tick())
+	{
+		CCharacter *pVictim = nullptr;
+		// Find other players
+		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+		{
+			if(p->m_Core.m_Passenger != &m_Core) {
+				continue;
+			}
+			pVictim = p;
+		}
+
+		if(!pVictim)
+			return; // Should never happen?
+
+		int Damage = 1;
+		pVictim->TakeDamage(vec2(0.0f,0.0f), Damage, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
+		IncreaseOverallHp(Damage);
+	}
+
+	if (m_NextDryingTick <= Server()->Tick())
+	{
+		int DryingRate = g_Config.m_InfJockeyDryingRate; // rate X per 10 seconds
+		float Rate = 10.0f / DryingRate;
+		m_NextDryingTick = Server()->Tick() + Rate * Server()->TickSpeed();
+	}
 }
 /* INFECTION MODIFICATION END *****************************************/
