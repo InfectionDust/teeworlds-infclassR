@@ -582,9 +582,10 @@ void CCharacter::HandleWeapons()
 				{
 					if(!m_Core.m_IsPassenger && !VictimChar->m_Core.m_Passenger)
 					{
-						Damage = 0;
 						LeapToTarget(VictimChar);
 					}
+					if(m_Leaping)
+						Damage = 0;
 				}
 				if(GetPlayerClass() == PLAYERCLASS_SMOKER)
 				{
