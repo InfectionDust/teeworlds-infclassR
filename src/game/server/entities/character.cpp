@@ -57,6 +57,7 @@ m_pConsole(pConsole)
 		m_BarrierHintIDs[i] = Server()->SnapNewID();
 	}
 	m_AntiFireTime = 0;
+	m_Leaping = false;
 	m_IsFrozen = false;
 	m_IsInSlowMotion = false;
 	m_FrozenTime = -1;
@@ -576,7 +577,14 @@ void CCharacter::HandleWeapons()
 			{
 				float Rate = 1.0f;
 				int Damage = 1;
-				
+				if(GetPlayerClass() == PLAYERCLASS_JOCKEY)
+				{
+					Damage = 0;
+					if(!m_Core.m_IsPassenger)
+					{
+						LeapToTarget(VictimChar);
+					}
+				}
 				if(GetPlayerClass() == PLAYERCLASS_SMOKER)
 				{
 					Rate = 0.5f;
@@ -595,6 +603,23 @@ void CCharacter::HandleWeapons()
 						IncreaseOverallHp(2);
 				}
 			}
+		}
+	}
+
+	if(m_Leaping)
+	{
+		vec2 Direction = m_LeapingTargetPosition - m_Pos;
+		if (length(Direction) < m_ProximityRadius)
+		{
+		    m_Core.m_Vel = vec2(0, 0);
+		    m_Core.m_Pos = m_LeapingTargetPosition;
+		    m_Leaping = false;
+		}
+		else
+		{
+		    // Leap right to the target position
+		    float Intensity = 4; // g_Config.m_InfLeapSpeed / 10.0f;
+		    m_Core.m_Vel += normalize(Direction)*Intensity;
 		}
 	}
 /* INFECTION MODIFICATION END *****************************************/
@@ -1066,10 +1091,19 @@ void CCharacter::Tick()
 	
 	vec2 PrevPos = m_Core.m_Pos;
 
-	if (m_Core.m_Passenger)
+	if(m_Core.m_Passenger)
 	{
-		if(m_Core.m_Infected || m_Core.m_HookProtected || m_Core.m_Passenger->m_Infected)
+		if(m_Core.m_Infected)
+		{
 			m_Core.SetPassenger(nullptr);
+		}
+		else if(m_Core.m_Passenger->m_Infected)
+		{
+		}
+		else if (m_Core.m_HookProtected)
+		{
+			m_Core.SetPassenger(nullptr);
+		}
 	}
 
 	m_Core.Tick(true, &CoreTickParams);
