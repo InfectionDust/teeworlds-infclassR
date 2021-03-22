@@ -1381,6 +1381,16 @@ void CInfClassCharacter::Die(int Killer, int Weapon)
 	if (m_Core.m_Passenger) {
 		m_Core.SetPassenger(nullptr);
 	}
+	if(m_Core.m_IsPassenger)
+	{
+		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+		{
+			if (p->m_Core.m_Passenger == &m_Core)
+			{
+				p->m_Core.SetPassenger(nullptr);
+			}
+		}
+	}
 /* INFECTION MODIFICATION END *****************************************/
 
 	if(pKillerCharacter && (pKillerCharacter != this))
