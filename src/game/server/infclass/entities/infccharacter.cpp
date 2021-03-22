@@ -1281,7 +1281,20 @@ void CInfClassCharacter::Die(int Killer, int Weapon)
 	{
 		return;
 	}
-
+	
+	if (m_Core.m_Passenger) {
+		m_Core.SetPassenger(nullptr);
+	}
+	if(m_Core.m_IsPassenger)
+	{
+		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+		{
+			if (p->m_Core.m_Passenger == &m_Core)
+			{
+				p->m_Core.SetPassenger(nullptr);
+			}
+		}
+	}
 	if(GetPlayerClass() == PLAYERCLASS_GHOUL)
 	{
 		m_pPlayer->IncreaseGhoulLevel(-20);
@@ -1377,19 +1390,6 @@ void CInfClassCharacter::Die(int Killer, int Weapon)
 	else
 	{
 		m_pPlayer->Infect(pKillerPlayer);
-	}
-	if (m_Core.m_Passenger) {
-		m_Core.SetPassenger(nullptr);
-	}
-	if(m_Core.m_IsPassenger)
-	{
-		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
-		{
-			if (p->m_Core.m_Passenger == &m_Core)
-			{
-				p->m_Core.SetPassenger(nullptr);
-			}
-		}
 	}
 /* INFECTION MODIFICATION END *****************************************/
 
