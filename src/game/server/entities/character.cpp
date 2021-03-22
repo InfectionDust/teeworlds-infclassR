@@ -622,7 +622,7 @@ void CCharacter::HandleWeapons()
 		else
 		{
 			// Leap right to the target position
-			float Intensity = 4; // g_Config.m_InfLeapSpeed / 10.0f;
+			float Intensity = 2; // g_Config.m_InfLeapSpeed / 10.0f;
 			m_Core.m_Vel += normalize(Direction)*Intensity;
 		}
 	}
@@ -2543,7 +2543,7 @@ void CCharacter::LeapToTarget(CCharacter *pTarget)
 		
 		vec2 Direction = m_LeapingTargetPosition - m_Pos;
 		
-		m_Core.m_Vel = normalize(Direction) * 10; // g_Config.m_InfLeapSpeed / 10.0f;
+		m_Core.m_Vel = normalize(Direction) * g_Config.m_InfLeapSpeed / 10.0f;
 	}
 }
 
