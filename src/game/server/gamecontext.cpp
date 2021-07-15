@@ -3525,7 +3525,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
-		else if(str_comp_nocase(pHelpPage, "electrician") == 0)
+		else if((str_comp_nocase(pHelpPage, "electrician") == 0) || (str_comp_nocase(pHelpPage, "electric") == 0))
 		{
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Electrician"), NULL);
