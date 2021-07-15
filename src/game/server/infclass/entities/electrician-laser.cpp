@@ -23,9 +23,7 @@ void CElectricianLaser::Tick()
 	}
 
 	CInfClassCharacter *pOwnerChar = GameController()->GetCharacter(GetOwner());
-
-	CVoltageBox *pBox = pOwnerChar->GetVoltageBox();
-	if(!pBox)
+	if(!pOwnerChar || !pOwnerChar->GetVoltageBox())
 	{
 		Reset();
 		return;
@@ -59,7 +57,14 @@ bool CElectricianLaser::HitCharacter(vec2 From, vec2 To)
 	m_Pos = At;
 	m_Energy = -1;
 
+	if(!pOwnerChar)
+	{
+		Reset();
+		return true;
+	}
+
 	CVoltageBox *pBox = pOwnerChar->GetVoltageBox();
+
 	if(!pBox)
 	{
 		Reset();
