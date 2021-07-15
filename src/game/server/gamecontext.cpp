@@ -3530,15 +3530,11 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Electrician"), NULL);
 			Buffer.append(" ~~\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Electrician can use the hammer to place a High Voltage Box."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Electrician can place a High Voltage Box with hammer. A Link goes from the Box to you and any intected hit with the laser rifle."), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The placed box will be linked to the Electrician. Subsequent use of the hammer triggers the box discharging."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Using hammer again creates a Discharge which stuns and deals damage to any infected along any of the Links."), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Discharges hit all zombies on the links."), NULL);
-			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Electrician's Laser doesn't deal any damage but creates a link between the box and the target zombie."), NULL);
-			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("A linked zombie will be always one-shot by a Discharge. If a linked zombie moves out of box's range a Discharge will happen and it will die."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Shotgun is replaced with a chaining laser which deals damage and jumps to any infected nearby. It's twice as powerful against stunned infected."), NULL);
 
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
