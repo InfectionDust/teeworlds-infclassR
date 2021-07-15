@@ -71,9 +71,10 @@ bool CElectricianLaser::HitCharacter(vec2 From, vec2 To)
 		return true;
 	}
 
-	if(distance(At, pBox->GetPos()) >= Config()->m_InfVoltageBoxLinkLength)
+	static constexpr float Threshold = 16;
+	if(distance(pHit->GetPos(), pBox->GetPos()) + Threshold >= Config()->m_InfVoltageBoxLinkLength)
 	{
-		// TODO: say to the owner that the target is out of the radius
+		// TODO: say to the owner that the target is out of the hvbox range
 		return true;
 	}
 
