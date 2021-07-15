@@ -329,9 +329,13 @@ void CVoltageBox::DoDischarge()
 
 		if(!pCharacter->IsHuman() && !pCharacter->IsInvincible())
 		{
+			// Freeze e.g. to prevent Boomers from the effect
+			pCharacter->Freeze(ElectricityFreezeDuration, GetOwner(), FREEZEREASON_ELECTRICITY);
 			pCharacter->Die(GetOwner(), WEAPON_LASER);
 		}
 	}
+
+	const int FreezeTicks = ElectricityFreezeDuration * Server()->TickSpeed();
 
 	// Find other players on the links
 	for(int i = 0; i < MAX_CLIENTS; ++i)
@@ -349,12 +353,12 @@ void CVoltageBox::DoDischarge()
 			float Len = distance(p->GetPos(), IntersectPos);
 			if(Len < (p->GetProximityRadius() + LinkFieldRadius))
 			{
-				p->TakeDamage(DamageForce, BasicDamage, GetOwner(), WEAPON_LASER, TAKEDAMAGEMODE_NOINFECTION);
-
-				if(p->IsAlive())
+				if(!p->IsFrozen() && (p->GetFrozenForTicks() < FreezeTicks))
 				{
+					// Re-freeze if this freeze would stay longer.
 					p->Freeze(ElectricityFreezeDuration, GetOwner(), FREEZEREASON_ELECTRICITY);
 				}
+				p->TakeDamage(DamageForce, BasicDamage, GetOwner(), WEAPON_LASER, TAKEDAMAGEMODE_NOINFECTION);
 			}
 		}
 	}

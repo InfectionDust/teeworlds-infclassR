@@ -1526,6 +1526,11 @@ bool CInfClassCharacter::HasHallucination() const
 	return m_HallucinationTick > 0;
 }
 
+int CInfClassCharacter::GetFrozenForTicks() const
+{
+	return m_FrozenTime;
+}
+
 void CInfClassCharacter::CheckSuperWeaponAccess()
 {
 	// check kills of player

@@ -75,6 +75,8 @@ public:
 	bool IsInvincible() const; // Invincible here means "ignores all damage"
 	bool HasHallucination() const;
 
+	int GetFrozenForTicks() const;
+
 	void CheckSuperWeaponAccess();
 	void MaybeGiveStunGrenades();
 	void FireElectricianBox();
